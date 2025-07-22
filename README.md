@@ -1,100 +1,299 @@
-# ProofChain - Digital Receipts + Warranty
+# ProofChain - Digital Receipts + Warranty System
 
-This repository contains the Clarity smart contract for ProofChain, a system designed to issue unique, NFT-based digital receipts with embedded smart warranty clocks on the Stacks blockchain.
+A blockchain-based digital receipt and warranty management system built on Stacks using Clarinet 2.0+. ProofChain creates immutable, NFT-based receipts with embedded warranty information and automated claim processing.
 
-## 🚀 Key Functional Features
+## 🌟 Features
 
-### NFT-Based Receipts
-Each successful sale issues a unique Non-Fungible Token (NFT) receipt. This NFT serves as an immutable, verifiable proof of purchase.
-- **Timestamp:** The block height at which the receipt was minted is embedded, providing a precise record of the sale date.
-- **Product ID:** A unique identifier for the purchased product is stored within the NFT.
-- **Merchant ID:** The principal address of the merchant who issued the receipt is recorded.
+### Core Functionality
+- **NFT-Based Receipts**: Each purchase generates a unique, tamper-proof digital receipt
+- **Smart Warranty Clock**: Automated warranty tracking with expiration date encoding
+- **Warranty Claims**: Streamlined refund/repair claim processing
+- **Merchant Authorization**: Verified merchant system for trusted transactions
+- **Ownership Transfer**: Receipts can be transferred (useful for gifts/resales)
 
-### Smart Warranty Clock
-Each NFT receipt includes a built-in warranty mechanism.
-- **Expiry Date Encoded:** A `warranty-expiry-block` (block height) is encoded into the NFT at the time of minting.
-- **Trigger Options:** The contract provides a read-only function to check if the warranty is still valid based on the current block height. This status can then be used by off-chain applications to trigger refund or repair options if the warranty is active.
+### Key Benefits
+- ✅ **Immutable Records**: Blockchain-based receipts that cannot be lost or forged
+- ✅ **Automated Warranty**: Smart contracts automatically validate warranty periods
+- ✅ **Transparent Claims**: All warranty claims are recorded on-chain
+- ✅ **Multi-Merchant Support**: Scalable system for multiple retailers
+- ✅ **Consumer Protection**: Built-in safeguards against fraud
 
-## 💡 Contract Details
+## 🛠 Technical Specifications
 
-- **Contract Name:** `proofchain-receipts.clar`
-- **Purpose:** To provide a decentralized, transparent, and verifiable system for digital receipts and product warranties.
+- **Blockchain**: Stacks
+- **Language**: Clarity Smart Contract
+- **Framework**: Clarinet 2.0+
+- **Standards**: Custom NFT-like implementation for receipts
 
-## 🛠️ How to Use
-
-This contract is built using Clarity and can be deployed and interacted with on the Stacks blockchain. We recommend using Clarinet for local development and testing.
+## 🚀 Getting Started
 
 ### Prerequisites
-- [Clarinet](https://docs.stacks.co/clarity/clarinet) installed on your system.
+- [Clarinet](https://docs.hiro.so/clarinet) 2.0 or later
+- [Stacks CLI](https://docs.hiro.so/stacks-cli)
+- Node.js 16+ (for testing)
 
-### Local Development with Clarinet
+### Installation
 
-1.  **Create a new Clarinet project:**
-    \`\`\`bash
-    clarinet new proofchain-clarity-contract
-    cd proofchain-clarity-contract
-    \`\`\`
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-username/proofchain-digital-receipts-stacks.git
+   cd proofchain-digital-receipts-stacks
+   ```
 
-2.  **Replace the default contract:**
-    Delete the `contracts/counter.clar` file and create a new file named `contracts/proofchain-receipts.clar`. Copy the Clarity code provided into this new file.
+2. **Initialize Clarinet project**
+   ```bash
+   clarinet new proofchain
+   cd proofchain
+   ```
 
-3.  **Start a Clarinet development environment:**
-    \`\`\`bash
-    clarinet integrate
-    \`\`\`
-    This will start a local blockchain instance.
+3. **Add the contract**
+   ```bash
+   # Copy the contract file to contracts/proofchain.clar
+   cp ../proofchain.clar contracts/
+   ```
 
-4.  **Deploy the contract (in a new terminal):**
-    \`\`\`bash
-    clarinet deploy
-    \`\`\`
-    This will deploy `proofchain-receipts.clar` to your local blockchain.
+4. **Update Clarinet.toml**
+   ```toml
+   [contracts.proofchain]
+   path = "contracts/proofchain.clar"
+   ```
 
-5.  **Interact with the contract:**
-    You can use `clarinet console` or `clarinet call` to interact with the deployed contract. The default deployer principal in Clarinet is `ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM`.
+### Deployment
 
-    **Example Interactions:**
+#### Local Development
+```bash
+# Start local devnet
+clarinet integrate
 
-    *   **Mint a new receipt:**
-        \`\`\`bash
-        clarinet call proofchain-receipts mint-receipt '(u1001 .principal "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM" u100)' --sender ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-        # Arguments: product-id (u1001), merchant-id (ST1PQ...), warranty-duration-in-blocks (u100)
-        # The sender of the transaction will be the initial owner of the NFT receipt.
-        \`\`\`
+# Deploy contract
+clarinet deploy --devnet
+```
 
-    *   **Get receipt details:**
-        \`\`\`bash
-        clarinet call proofchain-receipts get-receipt-details '(u1)'
-        # Argument: token-id (u1)
-        \`\`\`
+#### Testnet Deployment
+```bash
+# Deploy to testnet
+clarinet deploy --testnet
+```
 
-    *   **Check warranty status:**
-        \`\`\`bash
-        clarinet call proofchain-receipts check-warranty-status '(u1)'
-        # Argument: token-id (u1)
-        \`\`\`
+#### Mainnet Deployment
+```bash
+# Deploy to mainnet (production)
+clarinet deploy --mainnet
+```
 
-    *   **Get the owner of a receipt:**
-        \`\`\`bash
-        clarinet call proofchain-receipts get-owner '(u1)'
-        # Argument: token-id (u1)
-        \`\`\`
+## 📖 Usage Guide
 
-    *   **Transfer a receipt:**
-        \`\`\`bash
-        clarinet call proofchain-receipts transfer '(u1 .principal "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM" .principal "ST2CY5V39NHDPWSX69WMGMV7X6DGFJXYK3ATYJ000")' --sender ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-        # Arguments: token-id (u1), sender (ST1PQ...), recipient (ST2CY...)
-        # Note: Replace ST2CY5V39NHDPWSX69WMGMV7X6DGFJXYK3ATYJ000 with another valid test principal from your Clarinet environment.
-        \`\`\`
+### For Merchants
 
-### Error Codes
+#### 1. Register as Merchant
+```clarity
+;; Contract owner registers merchant
+(contract-call? .proofchain register-merchant 'SP2MERCHANT... "Electronics Store")
+```
 
-The contract defines the following error codes:
+#### 2. Issue Digital Receipt
+```clarity
+;; Issue receipt for customer purchase
+(contract-call? .proofchain issue-receipt 
+  'SP1CUSTOMER...           ;; Customer address
+  "LAPTOP001"               ;; Product ID
+  "Gaming Laptop X1"        ;; Product name
+  u150000                   ;; Price in microSTX (1500 STX)
+  u365                      ;; Warranty period (1 year)
+  "manufacturer"            ;; Warranty type
+  (some "ipfs://metadata")) ;; Optional metadata URI
+```
 
--   \`u100\`: \`ERR-NOT-AUTHORIZED\` - The transaction sender is not authorized to perform the action (if access control is implemented).
--   \`u101\`: \`ERR-INVALID-TOKEN-ID\` - The provided token ID is invalid (used by SIP-009 trait functions).
--   \`u103\`: \`ERR-RECEIPT-NOT-FOUND\` - The receipt with the given token ID does not exist.
+### For Customers
 
-## 📄 License
+#### 1. Check Warranty Status
+```clarity
+;; Check if warranty is still valid
+(contract-call? .proofchain check-warranty-status u1)
+```
 
-This project is open-source and available under the [MIT License](LICENSE).
+#### 2. Submit Warranty Claim
+```clarity
+;; Submit claim for repair/refund
+(contract-call? .proofchain submit-warranty-claim 
+  u1              ;; Receipt ID
+  "repair"        ;; Claim type: "repair", "refund", "replacement"
+  u50000)         ;; Claim amount in microSTX
+```
+
+#### 3. Transfer Receipt
+```clarity
+;; Transfer receipt to new owner (for resale/gift)
+(contract-call? .proofchain transfer-receipt u1 'SP2NEWOWNER...)
+```
+
+### For Admins
+
+#### Process Warranty Claims
+```clarity
+;; Approve or reject warranty claim
+(contract-call? .proofchain process-warranty-claim 
+  u1           ;; Receipt ID
+  u1           ;; Claim ID
+  "approved")  ;; Status: "approved", "rejected", "completed"
+```
+
+## 🔧 Contract Functions
+
+### Public Functions
+
+| Function | Description | Access |
+|----------|-------------|---------|
+| `register-merchant` | Register new authorized merchant | Owner only |
+| `issue-receipt` | Create digital receipt NFT | Authorized merchants |
+| `transfer-receipt` | Transfer receipt ownership | Receipt owner |
+| `submit-warranty-claim` | Submit warranty claim | Receipt owner |
+| `process-warranty-claim` | Process pending claims | Merchant/Owner |
+| `deactivate-receipt` | Deactivate receipt | Owner/Merchant |
+
+### Read-Only Functions
+
+| Function | Description | Returns |
+|----------|-------------|---------|
+| `get-receipt` | Get receipt details | Receipt data |
+| `check-warranty-status` | Check warranty validity | Warranty info |
+| `get-warranty-claim` | Get claim details | Claim data |
+| `get-merchant-info` | Get merchant details | Merchant data |
+| `is-receipt-owner` | Check ownership | Boolean |
+
+## 🛡 Security Features
+
+- **Access Control**: Role-based permissions for merchants, customers, and admins
+- **Warranty Validation**: Automatic expiration checking prevents invalid claims
+- **Fraud Prevention**: Claims cannot exceed purchase price
+- **Immutable Records**: All transactions recorded on blockchain
+- **Authorized Merchants**: Only verified merchants can issue receipts
+
+## 🧪 Testing
+
+### Run Tests
+```bash
+# Run all tests
+clarinet test
+
+# Run specific test file
+clarinet test tests/proofchain_test.ts
+```
+
+### Example Test Cases
+- Merchant registration and authorization
+- Receipt issuance and validation
+- Warranty expiration logic
+- Claim submission and processing
+- Ownership transfers
+- Edge cases and error handling
+
+## 🔍 Error Codes
+
+| Code | Constant | Description |
+|------|----------|-------------|
+| 100 | `err-owner-only` | Function restricted to contract owner |
+| 101 | `err-not-authorized` | Caller not authorized for this action |
+| 102 | `err-receipt-not-found` | Receipt doesn't exist or is inactive |
+| 103 | `err-warranty-expired` | Warranty period has expired |
+| 104 | `err-invalid-merchant` | Merchant not registered or inactive |
+| 105 | `err-invalid-warranty-period` | Warranty period exceeds maximum allowed |
+| 106 | `err-claim-already-processed` | Claim has already been processed |
+| 107 | `err-insufficient-funds` | Claim amount exceeds purchase price |
+
+## 📊 Data Structures
+
+### Receipt NFT
+```clarity
+{
+  owner: principal,
+  merchant: principal,
+  product-id: (string-ascii 64),
+  product-name: (string-ascii 128),
+  purchase-price: uint,
+  purchase-timestamp: uint,
+  warranty-period-days: uint,
+  warranty-type: (string-ascii 32),
+  metadata-uri: (optional (string-ascii 256)),
+  is-active: bool
+}
+```
+
+### Warranty Claim
+```clarity
+{
+  claimant: principal,
+  claim-type: (string-ascii 32),
+  claim-timestamp: uint,
+  claim-amount: uint,
+  status: (string-ascii 16),
+  processor: (optional principal)
+}
+```
+
+## 🌐 Frontend Integration
+
+### JavaScript/TypeScript Example
+```typescript
+import { StacksTestnet } from '@stacks/network';
+import { makeContractCall } from '@stacks/transactions';
+
+// Issue receipt
+const issueReceipt = async () => {
+  const txOptions = {
+    contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+    contractName: 'proofchain',
+    functionName: 'issue-receipt',
+    functionArgs: [/* function arguments */],
+    network: new StacksTestnet(),
+    // ... other options
+  };
+  
+  return await makeContractCall(txOptions);
+};
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Guidelines
+- Write comprehensive tests for new features
+- Follow Clarity best practices
+- Update documentation for API changes
+- Ensure all tests pass before submitting PR
+
+## 📜 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🛟 Support
+
+- **Documentation**: [Clarity Documentation](https://docs.stacks.co/clarity)
+- **Issues**: [GitHub Issues](https://github.com/your-username/proofchain-digital-receipts-stacks/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/your-username/proofchain-digital-receipts-stacks/discussions)
+
+## 🗺 Roadmap
+
+- [ ] **V1.1**: Multi-signature warranty claims
+- [ ] **V1.2**: Integration with existing POS systems
+- [ ] **V1.3**: Mobile app for receipt management
+- [ ] **V2.0**: Cross-chain compatibility
+- [ ] **V2.1**: AI-powered fraud detection
+- [ ] **V2.2**: Marketplace for warranty transfers
+
+## 👥 Team
+
+- **Smart Contract Development**: Built with Clarity best practices
+- **Security Audits**: Comprehensive testing and validation
+- **Documentation**: Complete API and usage documentation
+
+---
+
+**Built with ❤️ using Stacks and Clarinet**
+
+*ProofChain - Making warranties as permanent as the blockchain itself.*
